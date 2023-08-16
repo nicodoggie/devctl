@@ -149,7 +149,9 @@ class VaultSecretsProvider extends SecretsProvider {
       entries,
       async (content, { name, key }) => {
 
-        const [keyString, version] = key.split('@');
+        const lastAtIndex = key.lastIndexOf('@');
+        const keyString = key.slice(0, lastAtIndex);
+        const version = key.slice(lastAtIndex + 1)
         const [keyPath, jsonPath] = keyString.split(':');
 
         let command = [];
@@ -158,7 +160,6 @@ class VaultSecretsProvider extends SecretsProvider {
         } else {
           command = [...this.kvGetCmd, `-version=${version}`, keyPath];
         }
-
 
         const execResult = await spawnAsync(this.binary, command, {
           env: { ...process.env, VAULT_ADDR: this.endpoint },
