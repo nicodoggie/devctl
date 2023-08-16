@@ -106,7 +106,9 @@ class VaultSecretsProvider extends SecretsProvider {
 
     if (files && 'default' in files) {
       for await (const { path, key } of files['default']) {
-        const [keyString, version] = key.split('@');
+        const lastAtIndex = key.lastIndexOf('@');
+        const keyString = key.slice(0, lastAtIndex);
+        const version = key.slice(lastAtIndex + 1)
 
         let command = [];
 
