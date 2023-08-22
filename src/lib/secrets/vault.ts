@@ -9,6 +9,8 @@ import deepmerge from 'deepmerge';
 import { resolve } from 'path';
 import { filesystem } from '@cipherstash/gluegun';
 import spawnAsync from "@expo/spawn-async";
+import { spawnSync } from 'child_process';
+import { keyBy } from 'lodash';
 
 interface VaultSecretsConfig extends SecretsConfig {
   binary: string;
@@ -70,9 +72,12 @@ class VaultSecretsProvider extends SecretsProvider {
   async authenticate(): Promise<void> {
     try {
       console.log(`Token lookup...`)
-      await spawnAsync(this.binary, ['token', 'lookup'], {
+      console.time('lookup')
+      spawnSync(this.binary, ['token', 'lookup'], {
         env: { ...process.env, VAULT_ADDR: this.endpoint }
       });
+      console.timeEnd('lookup')
+      console.log('Token lookup succeeded!')
     } catch (e) {
       console.log(`Token lookup failed. Authenticating...`)
       // Run login
@@ -84,6 +89,7 @@ class VaultSecretsProvider extends SecretsProvider {
   };
 
   async fetch(environment: string): Promise<Record<string, any>> {
+    console.log(`Fetching secrets...`)
     const { entries } = this.entry;
 
     let secretEntries: Record<string, any> = {};
@@ -147,37 +153,41 @@ class VaultSecretsProvider extends SecretsProvider {
   }
 
   async processSecretEntries(entries: VaultEntryItem[]) {
-    return Bluebird.reduce(
-      entries,
-      async (content, { name, key }) => {
+    // Parse keys
+    const secretMap = await Bluebird.map(entries, async ({ name, key }) => {
+      console.log(`Fetching secret \`${name}\` from \`${key}\`...`);
+      const lastAtIndex = key.lastIndexOf('@');
+      const keyString = key.slice(0, lastAtIndex);
+      const version = key.slice(lastAtIndex + 1)
+      const [keyPath, jsonPath] = keyString.split(':');
 
-        const lastAtIndex = key.lastIndexOf('@');
-        const keyString = key.slice(0, lastAtIndex);
-        const version = key.slice(lastAtIndex + 1)
-        const [keyPath, jsonPath] = keyString.split(':');
+      let command = [];
+      if (version === 'latest') {
+        command = [...this.kvGetCmd, keyPath];
+      } else {
+        command = [...this.kvGetCmd, `-version=${version}`, keyPath];
+      }
 
-        let command = [];
-        if (version === 'latest') {
-          command = [...this.kvGetCmd, keyPath];
-        } else {
-          command = [...this.kvGetCmd, `-version=${version}`, keyPath];
-        }
 
-        const execResult = await spawnAsync(this.binary, command, {
-          env: { ...process.env, VAULT_ADDR: this.endpoint },
-        });
+      const execResult = await spawnAsync(this.binary, command, {
+        env: { ...process.env, VAULT_ADDR: this.endpoint },
+      });
 
-        const parsed = JSON.parse(execResult.stdout);
+      const parsed = JSON.parse(execResult.stdout);
+      let content;
+      if (jsonPath === '*') {
+        content = parsed;
+      } else {
+        content = parsed[jsonPath];
+      }
 
-        if (jsonPath === '*') {
-          content[name] = parsed;
-        } else {
-          content[name] = parsed[jsonPath];
-        }
-        return content;
-      },
-      {}
-    );
+      return { name, content };
+    });
+
+    return secretMap.reduce((secrets, { name, content }) => {
+      secrets[name] = content;
+      return secrets;
+    }, {});
   }
 }
 
