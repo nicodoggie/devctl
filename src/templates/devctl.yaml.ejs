@@ -8,9 +8,13 @@ services:
 
 secrets:
 - name: vault
-provider: vault
-config:
-endpoint:
+  provider: vault
+  config:
+    binary: vault
+    loginArgs: ["login", "-format=json"]
+    endpoint:
+  files:
+  entries:
 
 environment:
   - name: dev

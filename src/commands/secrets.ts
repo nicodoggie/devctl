@@ -7,7 +7,7 @@ module.exports = {
   description: 'Populate secrets',
   run: async (toolbox: GluegunToolbox) => {
     console.log('Running pull-secrets');
-    const { initSecretsProvider } = await import('../lib/secrets.js');
+    const { initSecretsProvider } = await import('../lib/secrets.mjs');
     const { print, filesystem } = toolbox;
     const config: DevctlConfig = toolbox.config;
     const { secrets, current } = config;

@@ -94,6 +94,10 @@ class VaultSecretsProvider extends SecretsProvider {
 
     let secretEntries: Record<string, any> = {};
 
+    if(!entries){
+      return secretEntries;
+    }
+
     if ('default' in entries) {
       secretEntries = await this.processSecretEntries(entries['default']);
     }
