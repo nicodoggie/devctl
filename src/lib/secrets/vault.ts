@@ -118,7 +118,7 @@ class VaultSecretsProvider extends SecretsProvider {
       for await (const { path, key } of files['default']) {
         const lastAtIndex = key.lastIndexOf('@');
         const keyString = key.slice(0, lastAtIndex);
-        const version = key.slice(lastAtIndex + 1)
+        const version = key.slice(lastAtIndex + 1);
 
         let command = [];
 
@@ -138,7 +138,9 @@ class VaultSecretsProvider extends SecretsProvider {
 
     if (files && environment in files) {
       for await (const { path, key } of files[environment]) {
-        const [keyString, version] = key.split('@');
+        const lastAtIndex = key.lastIndexOf('@');
+        const keyString = key.slice(0, lastAtIndex);
+        const version = key.slice(lastAtIndex + 1);
 
         let command = [];
         if (version === 'latest') {
