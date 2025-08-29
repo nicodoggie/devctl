@@ -1585,6 +1585,7 @@ __metadata:
     "@types/bluebird": "npm:^3.5.38"
     "@types/copyfiles": "npm:^2"
     "@types/ejs": "npm:^3"
+    "@types/glob": "npm:^9.0.0"
     "@types/js-yaml": "npm:^4.0.5"
     "@types/lodash": "npm:^4.14.197"
     "@types/mustache": "npm:^4.2.2"
@@ -1711,6 +1712,15 @@ __metadata:
     "@types/minimatch": "npm:^5.1.2"
     "@types/node": "npm:*"
   checksum: d25cd573753e0941ebd8581396fc6cb4a784fce51f85beb8da4aededcef89a758e20c130e35aeac48c6e274747c377249f592eb0d6757c4844139ba19a9693cb
+  languageName: node
+  linkType: hard
+
+"@types/glob@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "@types/glob@npm:9.0.0"
+  dependencies:
+    glob: "npm:*"
+  checksum: 812699a6f08bd989542e85e0a2b5c5b44c47016b71b44955b640edc066d074a43c064cea8fd72efc577282fcd5d62420a789b8cf0b32d8fd60fc74aa74f307ae
   languageName: node
   linkType: hard
 
@@ -4009,6 +4019,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"glob@npm:*, glob@npm:^11.0.0":
+  version: 11.0.3
+  resolution: "glob@npm:11.0.3"
+  dependencies:
+    foreground-child: "npm:^3.3.1"
+    jackspeak: "npm:^4.1.1"
+    minimatch: "npm:^10.0.3"
+    minipass: "npm:^7.1.2"
+    package-json-from-dist: "npm:^1.0.0"
+    path-scurry: "npm:^2.0.0"
+  bin:
+    glob: dist/esm/bin.mjs
+  checksum: 64df37607006f3e7a30e4aa9089dd3597fc5ad61606b499f90d4a51321c6fc0f11003b8e1fe434cdf9da7944706cf901daf59ed40e78343b8d4aa9c0b3b67dd3
+  languageName: node
+  linkType: hard
+
 "glob@npm:^10.2.2, glob@npm:^10.3.10":
   version: 10.4.5
   resolution: "glob@npm:10.4.5"
@@ -4022,22 +4048,6 @@ __metadata:
   bin:
     glob: dist/esm/bin.mjs
   checksum: 9f11c1d594fc96c500581ce51617a88e3b1caaf8c08cfa8089bb2b83c9ab94d0a01879cd7c60aef2602c35a8607ba45b4b7c429a854a2c63c9b33718eb37ade8
-  languageName: node
-  linkType: hard
-
-"glob@npm:^11.0.0":
-  version: 11.0.3
-  resolution: "glob@npm:11.0.3"
-  dependencies:
-    foreground-child: "npm:^3.3.1"
-    jackspeak: "npm:^4.1.1"
-    minimatch: "npm:^10.0.3"
-    minipass: "npm:^7.1.2"
-    package-json-from-dist: "npm:^1.0.0"
-    path-scurry: "npm:^2.0.0"
-  bin:
-    glob: dist/esm/bin.mjs
-  checksum: 64df37607006f3e7a30e4aa9089dd3597fc5ad61606b499f90d4a51321c6fc0f11003b8e1fe434cdf9da7944706cf901daf59ed40e78343b8d4aa9c0b3b67dd3
   languageName: node
   linkType: hard
 
