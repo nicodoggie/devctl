@@ -2,7 +2,6 @@ import { Chalk } from "chalk";
 import { consola } from "consola";
 import { box } from 'consola/utils'
 import { checkbox, confirm as confirmInq } from "@inquirer/prompts";
-import { Choice } from "@inquirer/checkbox";
 import ora from "ora";
 
 const chalk = new Chalk({
@@ -33,15 +32,15 @@ function success(message: string) {
   console.log(tmpl(message));
 }
 
-function ask(message: string, choiceInput: string[] | Choice<string>[]) {
-  const choices = choiceInput.map((item: string | Choice<string>) => {
+function ask(message: string, choiceInput: string[]) {
+  const choices = choiceInput.map((item: string) => {
     if (typeof item === 'object') {
       return item;
     }
     return {
       name: item,
       value: item,
-    } as Choice<string>
+    }
   })
 
   return checkbox({
