@@ -82,7 +82,7 @@
     "typescript": "^5.9.2"
   },
   "volta": {
-    "node": "18.20.8"
+    "node": "22.19.0"
   },
   "packageManager": "yarn@4.0.0-rc.43"
 }
